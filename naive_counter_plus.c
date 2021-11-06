@@ -3,7 +3,6 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <unistd.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 
@@ -59,8 +58,6 @@ int main(int argc, char** argv) {
 	printf("Counter finish in %lf ms\n", (double)(microseconds/1000.0));
 	printf("The value of counter should be %ld\n", (unsigned long)(COUNTER_VALUE * num_threads));
 	printf("The value of counter is %ld\n", counter);
-
-	return 0;
 
 	return 0;
 }
