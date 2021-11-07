@@ -16,9 +16,9 @@ void* update_counter(){
 	for(unsigned long k = 0; k < COUNTER_VALUE; k++){
 		__sync_fetch_and_add(&(thread_counter), 1);
 	}
-	pthread_mutex_lock(&counter_mutex);
+	//pthread_mutex_lock(&counter_mutex);
 	__sync_fetch_and_add(&(counter), thread_counter);
-	pthread_mutex_unlock(&counter_mutex);
+	//pthread_mutex_unlock(&counter_mutex);
 }
 
 
