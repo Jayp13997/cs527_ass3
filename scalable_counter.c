@@ -5,20 +5,25 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
+#include <math.h>
 
 #define COUNTER_VALUE (1UL << 24)
 
+unsigned long freq = 500;
 unsigned long counter = 0;
+int num_threads = 0;
 pthread_mutex_t counter_mutex;
 
 void* update_counter(){
-	unsigned long thread_counter = 0;
-	for(unsigned long k = 0; k < COUNTER_VALUE; k++){
-		__sync_fetch_and_add(&(thread_counter), 1);
+	for(unsigned long l = 0; l < ceil(COUNTER_VALUE/(freq * num_threads)); l++){
+		unsigned long thread_counter = 0;
+		for(unsigned long k = 0; k < (freq * num_threads); k++){
+			__sync_fetch_and_add(&(thread_counter), 1);
+		}
+		//pthread_mutex_lock(&counter_mutex);
+		__sync_fetch_and_add(&(counter), thread_counter);
+		//pthread_mutex_unlock(&counter_mutex);
 	}
-	//pthread_mutex_lock(&counter_mutex);
-	__sync_fetch_and_add(&(counter), thread_counter);
-	//pthread_mutex_unlock(&counter_mutex);
 }
 
 
@@ -29,7 +34,7 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	int num_threads = atoi(argv[1]);
+	num_threads = atoi(argv[1]);
 	if(num_threads < 1){
 		printf("Please enter a valid number of threads\n");
 		return 0;
