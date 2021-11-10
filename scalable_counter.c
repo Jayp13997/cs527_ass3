@@ -9,15 +9,19 @@
 
 #define COUNTER_VALUE (1UL << 24)
 
-unsigned long freq = 500;
+unsigned long freq = 35;
 unsigned long counter = 0;
 int num_threads = 0;
 pthread_mutex_t counter_mutex;
 
 void* update_counter(){
-	for(unsigned long l = 0; l < ceil(COUNTER_VALUE/(freq * num_threads)); l++){
+	int max_num_threads = num_threads;
+	if(max_num_threads > 32){
+		max_num_threads = 32;
+	}
+	for(unsigned long l = 0; l < ceil(COUNTER_VALUE/(freq * max_num_threads)); l++){
 		unsigned long thread_counter = 0;
-		for(unsigned long k = 0; k < (freq * num_threads); k++){
+		for(unsigned long k = 0; k < (freq * max_num_threads); k++){
 			__sync_fetch_and_add(&(thread_counter), 1);
 		}
 		//pthread_mutex_lock(&counter_mutex);
